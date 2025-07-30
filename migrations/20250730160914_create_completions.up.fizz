@@ -1,0 +1,7 @@
+create_table("completions") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("name", "string", {})
+	t.Column("completions", "integer", {})
+	t.Column("completed_at", "timestamp", {})
+	t.Timestamps()
+}

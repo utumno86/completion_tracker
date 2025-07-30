@@ -1,21 +1,24 @@
-# Welcome to Buffalo
+# Completion Tracker
 
-Thank you for choosing Buffalo for your web development needs.
+A Buffalo web application for tracking completion metrics and progress over time.
+
+## Features
+
+- **Completion Tracking**: Create and manage completion records with name, count, and timestamp
+- **Full CRUD Operations**: Create, read, update, and delete completion entries
+- **Responsive UI**: Bootstrap 5 based interface with navigation
+- **Data Validation**: Form validation with error messaging
+- **API Support**: JSON and XML endpoints alongside HTML views
 
 ## Database Setup
 
-It looks like you chose to set up your application using a database! Fantastic!
-
-The first thing you need to do is open up the "database.yml" file and edit it to use the correct usernames, passwords, hosts, etc... that are appropriate for your environment.
-
-You will also need to make sure that **you** start/install the database of your choice. Buffalo **won't** install and start it for you.
+This application uses PostgreSQL. Make sure PostgreSQL is running and update the `database.yml` file with your database credentials.
 
 ### Create Your Databases
 
-Ok, so you've edited the "database.yml" file and started your database, now Buffalo can create the databases in that file for you:
-
 ```console
 buffalo pop create -a
+buffalo pop migrate
 ```
 
 ## Starting the Application
@@ -26,14 +29,36 @@ Buffalo ships with a command that will watch your application and automatically 
 buffalo dev
 ```
 
-If you point your browser to [http://127.0.0.1:3000](http://127.0.0.1:3000) you should see a "Welcome to Buffalo!" page.
+If you point your browser to [http://127.0.0.1:3000](http://127.0.0.1:3000) you should see the Completion Tracker homepage.
 
-**Congratulations!** You now have your Buffalo application up and running.
+## Usage
 
-## What Next?
+### Web Interface
+- **Home**: [http://127.0.0.1:3000](http://127.0.0.1:3000)
+- **Completions**: [http://127.0.0.1:3000/completions](http://127.0.0.1:3000/completions)
+  - View all completion records
+  - Create new completions
+  - Edit existing completions
+  - Delete completions
 
-We recommend you heading over to [http://gobuffalo.io](http://gobuffalo.io) and reviewing all of the great documentation there.
+### API Endpoints
+All completion endpoints support JSON and XML:
+- `GET /completions` - List all completions
+- `GET /completions/{id}` - Get specific completion
+- `POST /completions` - Create new completion
+- `PUT /completions/{id}` - Update completion
+- `DELETE /completions/{id}` - Delete completion
 
-Good luck!
+## Development
+
+### Running Tests
+```console
+go test ./...
+```
+
+### Building for Production
+```console
+buffalo build
+```
 
 [Powered by Buffalo](http://gobuffalo.io)

@@ -1,3 +1,12 @@
 # For more information on using i18n see: https://github.com/nicksnyder/go-i18n
 - id: welcome_greeting
   translation: "Welcome to Buffalo (EN)"
+
+- id: completion.created.success
+  translation: "Completion was created successfully."
+
+- id: completion.updated.success
+  translation: "Completion was updated successfully."
+
+- id: completion.destroyed.success
+  translation: "Completion was deleted successfully."

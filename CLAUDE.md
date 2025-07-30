@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Buffalo web application called "completion_tracker" built with Go. Buffalo is a Go web framework that provides rapid web development with hot reloading, asset pipeline, and built-in ORM (Pop).
+This is a Buffalo web application called "completion_tracker" built with Go for tracking completion metrics and progress over time. Buffalo is a Go web framework that provides rapid web development with hot reloading, asset pipeline, and built-in ORM (Pop).
+
+### Core Features
+- **Completion Management**: Full CRUD operations for completion records
+- **Data Model**: Tracks name, completion count, and completion timestamp
+- **Responsive UI**: Bootstrap 5 interface with navigation
+- **API Support**: JSON/XML endpoints alongside HTML views
 
 ## Development Commands
 
@@ -45,11 +51,15 @@ buffalo build              # Build the complete application binary
 - `actions/` - HTTP handlers and routes (Buffalo's controllers)
   - `app.go` - Main application configuration and middleware setup
   - `home.go` - Home page handler
+  - `completions.go` - Completion CRUD handlers
 - `models/` - Database models and Pop ORM configuration
+  - `completion.go` - Completion model with validation
 - `templates/` - Plush HTML templates
+  - `completions/` - Completion views (index, show, new, edit, _form)
 - `assets/` - Frontend assets (SCSS, JS) processed by Webpack
 - `public/` - Static files and compiled assets
 - `locales/` - Internationalization files
+- `migrations/` - Database migration files
 - `grifts/` - Task runners (Buffalo's equivalent of Rake tasks)
 
 ### Key Technologies
@@ -64,11 +74,32 @@ buffalo build              # Build the complete application binary
 1. `cmd/app/main.go` starts the application
 2. `actions/app.go` configures middleware and routes
 3. Middleware stack includes CSRF protection, SSL forcing, database transactions
-4. Routes are defined in `App()` function in `actions/app.go`
+4. Routes are defined in `App()` function in `actions/app.go`:
+   - `/` - Home page
+   - `/completions` - Completion resource routes (RESTful CRUD)
 5. Database connection is initialized in `models/models.go`
+
+### Data Models
+- **Completion**: Tracks completion records with fields:
+  - `Name` (string) - Required
+  - `Completions` (int) - Required, number of completions
+  - `CompletedAt` (timestamp) - Required, when completed
+  - Standard UUID ID, CreatedAt, UpdatedAt fields
+
+### Routes
+The application uses Buffalo's resource routing for completions:
+- `GET /completions` - List all completions (with pagination)
+- `GET /completions/new` - Show creation form
+- `POST /completions` - Create new completion
+- `GET /completions/{id}` - Show specific completion
+- `GET /completions/{id}/edit` - Show edit form
+- `PUT /completions/{id}` - Update completion
+- `DELETE /completions/{id}` - Delete completion
+
+All routes support HTML, JSON, and XML content types.
 
 ### Database Configuration
 Database settings are in `database.yml` with separate configs for development, test, and production environments. Uses PostgreSQL by default.
 
 ### Frontend Assets
-Assets are managed by Webpack with live reloading. SCSS and JS files in `assets/` are compiled to `public/assets/`.
+Assets are managed by Webpack with live reloading. SCSS and JS files in `assets/` are compiled to `public/assets/`. Navigation bar includes links to Home and Completions.

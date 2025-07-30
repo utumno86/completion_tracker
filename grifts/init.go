@@ -2,7 +2,7 @@ package grifts
 
 import (
 	"completion_tracker/actions"
-	
+
 	"github.com/gobuffalo/buffalo"
 )
 

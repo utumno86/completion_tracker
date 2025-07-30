@@ -1,0 +1,38 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">Completion Details</h3>
+
+  <div class="float-end">
+    <%= linkTo(completionsPath(), {class: "btn btn-info"}) { %>
+      Back to all Completions
+    <% } %>
+    <%= linkTo(editCompletionPath({ completion_id: completion.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+    <%= linkTo(completionPath({ completion_id: completion.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+  </div>
+</div>
+
+
+
+<ul class="list-group mb-2 ">
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">Name</label>
+    <p class="d-inline-block"><%= completion.Name %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">Completions</label>
+    <p class="d-inline-block"><%= completion.Completions %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">CompletedAt</label>
+    <p class="d-inline-block"><%= completion.CompletedAt %></p>
+  </li>
+
+
+</ul>

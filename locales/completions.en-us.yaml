@@ -1,0 +1,6 @@
+- id: "completion.created.success"
+  translation: "Completion was successfully created."
+- id: "completion.updated.success"
+  translation: "Completion was successfully updated."
+- id: "completion.destroyed.success"
+  translation: "Completion was successfully destroyed."
