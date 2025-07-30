@@ -1,0 +1,56 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">📺 TV Shows</h3>
+  <div class="float-end">
+    <%= linkTo(newTvShowsPath(), {class: "btn btn-primary"}) { %>
+      <i class="fas fa-plus"></i> Add TV Show
+    <% } %>
+  </div>
+</div>
+
+<table class="table table-hover table-bordered">
+  <thead class="thead-light">
+    <th>Show Name</th><th>Progress</th><th>Completion Status</th><th>Completed</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (completion) in completions { %>
+      <tr>
+        <td class="align-middle">
+          <strong><%= completion.Name %></strong>
+        </td>
+        <td class="align-middle">
+          <% if (completion.Completions > 0) { %>
+            <div class="progress" style="height: 20px;">
+              <div class="progress-bar bg-success" role="progressbar" style="width: 100%;">
+                <%= completion.Completions %> episodes
+              </div>
+            </div>
+          <% } else { %>
+            <span class="text-muted">No episodes recorded</span>
+          <% } %>
+        </td>
+        <td class="align-middle">
+          <% if (completion.Completions > 0) { %>
+            <span class="badge bg-success">Watched</span>
+          <% } else { %>
+            <span class="badge bg-secondary">Not Started</span>
+          <% } %>
+        </td>
+        <td class="align-middle">
+          <%= completion.CompletedAt.Format("Jan 2, 2006") %>
+        </td>
+        <td>
+          <div class="float-end">
+            <%= linkTo(tvShowPath({ tv_show_id: completion.ID }), {class: "btn btn-sm btn-info", body: "View"}) %>
+            <%= linkTo(editTvShowPath({ tv_show_id: completion.ID }), {class: "btn btn-sm btn-warning", body: "Edit"}) %>
+            <%= linkTo(tvShowPath({ tv_show_id: completion.ID }), {class: "btn btn-sm btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Delete"}) %>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

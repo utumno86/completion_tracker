@@ -1,0 +1,6 @@
+- id: "video_game.created.success"
+  translation: "VideoGame was successfully created."
+- id: "video_game.updated.success"
+  translation: "VideoGame was successfully updated."
+- id: "video_game.destroyed.success"
+  translation: "VideoGame was successfully destroyed."

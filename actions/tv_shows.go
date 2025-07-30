@@ -11,13 +11,14 @@ import (
     "github.com/gobuffalo/x/responder"
 )
 
-type CompletionsResource struct{
+type TvShowsResource struct{
     buffalo.Resource
 }
 
-// List gets all Completions. This function is mapped to the path
-// GET /completions
-func (v CompletionsResource) List(c buffalo.Context) error {
+
+// List gets all TV Show completions. This function is mapped to the path
+// GET /tv_shows
+func (v TvShowsResource) List(c buffalo.Context) error {
     // Get the DB connection from the context
     tx, ok := c.Value("tx").(*pop.Connection)
     if !ok {
@@ -26,21 +27,19 @@ func (v CompletionsResource) List(c buffalo.Context) error {
 
     completions := &models.Completions{}
 
-    // Paginate results. Params "page" and "per_page" control pagination.
-    // Default values are "page=1" and "per_page=20".
+    // Paginate results and filter by TV Show type
     q := tx.PaginateFromParams(c.Params())
+    q = q.Where("type = ?", models.CompletionTypeTVShow)
 
-    // Retrieve all Completions from the DB
+    // Retrieve all TV Show Completions from the DB
     if err := q.All(completions); err != nil {
         return err
     }
 
     return responder.Wants("html", func(c buffalo.Context) error {
-        // Add the paginator to the context so it can be used in the template.
         c.Set("pagination", q.Paginator)
-
         c.Set("completions", completions)
-        return c.Render(http.StatusOK, r.HTML("completions/index.plush.html"))
+        return c.Render(http.StatusOK, r.HTML("tv_shows/index.plush.html"))
     }).Wants("json", func(c buffalo.Context) error {
         return c.Render(200, r.JSON(completions))
     }).Wants("xml", func(c buffalo.Context) error {
@@ -48,27 +47,27 @@ func (v CompletionsResource) List(c buffalo.Context) error {
     }).Respond(c)
 }
 
-// Show gets the data for one Completion. This function is mapped to
-// the path GET /completions/{completion_id}
-func (v CompletionsResource) Show(c buffalo.Context) error {
-    // Get the DB connection from the context
+// Show gets the data for one TV Show completion. This function is mapped to
+// the path GET /tv_shows/{tv_show_id}
+func (v TvShowsResource) Show(c buffalo.Context) error {
     tx, ok := c.Value("tx").(*pop.Connection)
     if !ok {
         return fmt.Errorf("no transaction found")
     }
 
-    // Allocate an empty Completion
     completion := &models.Completion{}
-
-    // To find the Completion the parameter completion_id is used.
-    if err := tx.Find(completion, c.Param("completion_id")); err != nil {
+    if err := tx.Find(completion, c.Param("tv_show_id")); err != nil {
         return c.Error(http.StatusNotFound, err)
+    }
+
+    // Ensure this is actually a TV Show completion
+    if completion.Type != models.CompletionTypeTVShow {
+        return c.Error(http.StatusNotFound, fmt.Errorf("completion is not a TV show"))
     }
 
     return responder.Wants("html", func(c buffalo.Context) error {
         c.Set("completion", completion)
-
-        return c.Render(http.StatusOK, r.HTML("completions/show.plush.html"))
+        return c.Render(http.StatusOK, r.HTML("tv_shows/show.plush.html"))
     }).Wants("json", func(c buffalo.Context) error {
         return c.Render(200, r.JSON(completion))
     }).Wants("xml", func(c buffalo.Context) error {
@@ -76,33 +75,25 @@ func (v CompletionsResource) Show(c buffalo.Context) error {
     }).Respond(c)
 }
 
-// New renders the form for creating a new Completion.
-// This function is mapped to the path GET /completions/new
-func (v CompletionsResource) New(c buffalo.Context) error {
-    c.Set("completion", &models.Completion{})
-    c.Set("completionTypes", models.GetCompletionTypes())
+// Create adds a TV Show completion to the DB. This function is mapped to the
+// path POST /tv_shows
+func (v TvShowsResource) Create(c buffalo.Context) error {
+    completion := &models.Completion{
+        Type: models.CompletionTypeTVShow,
+    }
 
-    return c.Render(http.StatusOK, r.HTML("completions/new.plush.html"))
-}
-
-// Create adds a Completion to the DB. This function is mapped to the
-// path POST /completions
-func (v CompletionsResource) Create(c buffalo.Context) error {
-    // Allocate an empty Completion
-    completion := &models.Completion{}
-
-    // Bind completion to the html form elements
     if err := c.Bind(completion); err != nil {
         return err
     }
 
-    // Get the DB connection from the context
+    // Ensure type is set correctly
+    completion.Type = models.CompletionTypeTVShow
+
     tx, ok := c.Value("tx").(*pop.Connection)
     if !ok {
         return fmt.Errorf("no transaction found")
     }
 
-    // Validate the data from the html form
     verrs, err := tx.ValidateAndCreate(completion)
     if err != nil {
         return err
@@ -110,14 +101,9 @@ func (v CompletionsResource) Create(c buffalo.Context) error {
 
     if verrs.HasAny() {
         return responder.Wants("html", func(c buffalo.Context) error {
-            // Make the errors available inside the html template
             c.Set("errors", verrs)
-
-            // Render again the new.html template that the user can
-            // correct the input.
             c.Set("completion", completion)
-
-            return c.Render(http.StatusUnprocessableEntity, r.HTML("completions/new.plush.html"))
+            return c.Render(http.StatusUnprocessableEntity, r.HTML("tv_shows/new.plush.html"))
         }).Wants("json", func(c buffalo.Context) error {
             return c.Render(http.StatusUnprocessableEntity, r.JSON(verrs))
         }).Wants("xml", func(c buffalo.Context) error {
@@ -126,11 +112,8 @@ func (v CompletionsResource) Create(c buffalo.Context) error {
     }
 
     return responder.Wants("html", func(c buffalo.Context) error {
-        // If there are no errors set a success message
         c.Flash().Add("success", T.Translate(c, "completion.created.success"))
-
-        // and redirect to the show page
-        return c.Redirect(http.StatusSeeOther, "/completions/%v", completion.ID)
+        return c.Redirect(http.StatusSeeOther, "/tv_shows/%v", completion.ID)
     }).Wants("json", func(c buffalo.Context) error {
         return c.Render(http.StatusCreated, r.JSON(completion))
     }).Wants("xml", func(c buffalo.Context) error {
@@ -138,46 +121,29 @@ func (v CompletionsResource) Create(c buffalo.Context) error {
     }).Respond(c)
 }
 
-// Edit renders a edit form for a Completion. This function is
-// mapped to the path GET /completions/{completion_id}/edit
-func (v CompletionsResource) Edit(c buffalo.Context) error {
-    // Get the DB connection from the context
+// Update changes a TV Show completion in the DB. This function is mapped to
+// the path PUT /tv_shows/{tv_show_id}
+func (v TvShowsResource) Update(c buffalo.Context) error {
     tx, ok := c.Value("tx").(*pop.Connection)
     if !ok {
         return fmt.Errorf("no transaction found")
     }
 
-    // Allocate an empty Completion
     completion := &models.Completion{}
-
-    if err := tx.Find(completion, c.Param("completion_id")); err != nil {
+    if err := tx.Find(completion, c.Param("tv_show_id")); err != nil {
         return c.Error(http.StatusNotFound, err)
     }
 
-    c.Set("completion", completion)
-    return c.Render(http.StatusOK, r.HTML("completions/edit.plush.html"))
-}
-
-// Update changes a Completion in the DB. This function is mapped to
-// the path PUT /completions/{completion_id}
-func (v CompletionsResource) Update(c buffalo.Context) error {
-    // Get the DB connection from the context
-    tx, ok := c.Value("tx").(*pop.Connection)
-    if !ok {
-        return fmt.Errorf("no transaction found")
+    if completion.Type != models.CompletionTypeTVShow {
+        return c.Error(http.StatusNotFound, fmt.Errorf("completion is not a TV show"))
     }
 
-    // Allocate an empty Completion
-    completion := &models.Completion{}
-
-    if err := tx.Find(completion, c.Param("completion_id")); err != nil {
-        return c.Error(http.StatusNotFound, err)
-    }
-
-    // Bind Completion to the html form elements
     if err := c.Bind(completion); err != nil {
         return err
     }
+
+    // Ensure type remains TV Show
+    completion.Type = models.CompletionTypeTVShow
 
     verrs, err := tx.ValidateAndUpdate(completion)
     if err != nil {
@@ -186,14 +152,9 @@ func (v CompletionsResource) Update(c buffalo.Context) error {
 
     if verrs.HasAny() {
         return responder.Wants("html", func(c buffalo.Context) error {
-            // Make the errors available inside the html template
             c.Set("errors", verrs)
-
-            // Render again the edit.html template that the user can
-            // correct the input.
             c.Set("completion", completion)
-
-            return c.Render(http.StatusUnprocessableEntity, r.HTML("completions/edit.plush.html"))
+            return c.Render(http.StatusUnprocessableEntity, r.HTML("tv_shows/edit.plush.html"))
         }).Wants("json", func(c buffalo.Context) error {
             return c.Render(http.StatusUnprocessableEntity, r.JSON(verrs))
         }).Wants("xml", func(c buffalo.Context) error {
@@ -202,11 +163,8 @@ func (v CompletionsResource) Update(c buffalo.Context) error {
     }
 
     return responder.Wants("html", func(c buffalo.Context) error {
-        // If there are no errors set a success message
         c.Flash().Add("success", T.Translate(c, "completion.updated.success"))
-
-        // and redirect to the show page
-        return c.Redirect(http.StatusSeeOther, "/completions/%v", completion.ID)
+        return c.Redirect(http.StatusSeeOther, "/tv_shows/%v", completion.ID)
     }).Wants("json", func(c buffalo.Context) error {
         return c.Render(http.StatusOK, r.JSON(completion))
     }).Wants("xml", func(c buffalo.Context) error {
@@ -214,21 +172,21 @@ func (v CompletionsResource) Update(c buffalo.Context) error {
     }).Respond(c)
 }
 
-// Destroy deletes a Completion from the DB. This function is mapped
-// to the path DELETE /completions/{completion_id}
-func (v CompletionsResource) Destroy(c buffalo.Context) error {
-    // Get the DB connection from the context
+// Destroy deletes a TV Show completion from the DB. This function is mapped
+// to the path DELETE /tv_shows/{tv_show_id}
+func (v TvShowsResource) Destroy(c buffalo.Context) error {
     tx, ok := c.Value("tx").(*pop.Connection)
     if !ok {
         return fmt.Errorf("no transaction found")
     }
 
-    // Allocate an empty Completion
     completion := &models.Completion{}
-
-    // To find the Completion the parameter completion_id is used.
-    if err := tx.Find(completion, c.Param("completion_id")); err != nil {
+    if err := tx.Find(completion, c.Param("tv_show_id")); err != nil {
         return c.Error(http.StatusNotFound, err)
+    }
+
+    if completion.Type != models.CompletionTypeTVShow {
+        return c.Error(http.StatusNotFound, fmt.Errorf("completion is not a TV show"))
     }
 
     if err := tx.Destroy(completion); err != nil {
@@ -236,15 +194,44 @@ func (v CompletionsResource) Destroy(c buffalo.Context) error {
     }
 
     return responder.Wants("html", func(c buffalo.Context) error {
-        // If there are no errors set a flash message
         c.Flash().Add("success", T.Translate(c, "completion.destroyed.success"))
-
-        // Redirect to the index page
-        return c.Redirect(http.StatusSeeOther, "/completions")
+        return c.Redirect(http.StatusSeeOther, "/tv_shows")
     }).Wants("json", func(c buffalo.Context) error {
         return c.Render(http.StatusOK, r.JSON(completion))
     }).Wants("xml", func(c buffalo.Context) error {
         return c.Render(http.StatusOK, r.XML(completion))
     }).Respond(c)
+}
+
+// New renders the form for creating a new TV Show completion.
+// This function is mapped to the path GET /tv_shows/new
+func (v TvShowsResource) New(c buffalo.Context) error {
+    completion := &models.Completion{
+        Type: models.CompletionTypeTVShow,
+    }
+    c.Set("completion", completion)
+
+    return c.Render(http.StatusOK, r.HTML("tv_shows/new.plush.html"))
+}
+
+// Edit renders a edit form for a TV Show completion. This function is
+// mapped to the path GET /tv_shows/{tv_show_id}/edit
+func (v TvShowsResource) Edit(c buffalo.Context) error {
+    tx, ok := c.Value("tx").(*pop.Connection)
+    if !ok {
+        return fmt.Errorf("no transaction found")
+    }
+
+    completion := &models.Completion{}
+    if err := tx.Find(completion, c.Param("tv_show_id")); err != nil {
+        return c.Error(http.StatusNotFound, err)
+    }
+
+    if completion.Type != models.CompletionTypeTVShow {
+        return c.Error(http.StatusNotFound, fmt.Errorf("completion is not a TV show"))
+    }
+
+    c.Set("completion", completion)
+    return c.Render(http.StatusOK, r.HTML("tv_shows/edit.plush.html"))
 }
 

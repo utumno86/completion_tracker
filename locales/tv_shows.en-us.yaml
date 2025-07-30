@@ -1,0 +1,6 @@
+- id: "tv_show.created.success"
+  translation: "TvShow was successfully created."
+- id: "tv_show.updated.success"
+  translation: "TvShow was successfully updated."
+- id: "tv_show.destroyed.success"
+  translation: "TvShow was successfully destroyed."

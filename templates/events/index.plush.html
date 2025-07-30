@@ -1,0 +1,33 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">Events</h3>
+  <div class="float-end">
+    <%= linkTo(newEventsPath(), {class: "btn btn-primary"}) { %>
+      Create New Event
+    <% } %>
+  </div>
+</div>
+
+<table class="table table-hover table-bordered">
+  <thead class="thead-light">
+    <th>Name</th><th>Attendees</th><th>Date</th><th>CompletedAt</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (event) in events { %>
+      <tr>
+        <td class="align-middle"><%= event.Name %></td><td class="align-middle"><%= event.Attendees %></td><td class="align-middle"><%= event.Date %></td><td class="align-middle"><%= event.CompletedAt %></td>
+        <td>
+          <div class="float-end">
+            <%= linkTo(eventPath({ event_id: event.ID }), {class: "btn btn-info", body: "View"}) %>
+            <%= linkTo(editEventPath({ event_id: event.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+            <%= linkTo(eventPath({ event_id: event.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

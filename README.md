@@ -4,9 +4,15 @@ A Buffalo web application for tracking completion metrics and progress over time
 
 ## Features
 
-- **Completion Tracking**: Create and manage completion records with name, count, and timestamp
+- **Type-Specific Completion Tracking**: Specialized interfaces for different completion types
+  - 📺 **TV Shows**: Track episodes watched with show-specific terminology
+  - 🎮 **Video Games**: Track hours played with gaming-focused interface  
+  - 📚 **Books**: Track reading progress with book-specific fields
+  - 🎧 **Audio Books**: Track listening hours with audio-specific interface
+  - 📅 **Events**: Track event attendance and participation
+- **Automatic Type Detection**: Interface determines completion type automatically
 - **Full CRUD Operations**: Create, read, update, and delete completion entries
-- **Responsive UI**: Bootstrap 5 based interface with navigation
+- **Responsive UI**: Bootstrap 5 based interface with dropdown navigation
 - **Data Validation**: Form validation with error messaging
 - **API Support**: JSON and XML endpoints alongside HTML views
 
@@ -35,19 +41,37 @@ If you point your browser to [http://127.0.0.1:3000](http://127.0.0.1:3000) you 
 
 ### Web Interface
 - **Home**: [http://127.0.0.1:3000](http://127.0.0.1:3000)
-- **Completions**: [http://127.0.0.1:3000/completions](http://127.0.0.1:3000/completions)
-  - View all completion records
-  - Create new completions
-  - Edit existing completions
-  - Delete completions
+- **Type-Specific Interfaces**:
+  - **TV Shows**: [http://127.0.0.1:3000/tv_shows](http://127.0.0.1:3000/tv_shows) - Track episodes watched
+  - **Video Games**: [http://127.0.0.1:3000/video_games](http://127.0.0.1:3000/video_games) - Track hours played
+  - **Books**: [http://127.0.0.1:3000/books](http://127.0.0.1:3000/books) - Track reading progress
+  - **Audio Books**: [http://127.0.0.1:3000/audio_books](http://127.0.0.1:3000/audio_books) - Track listening hours
+  - **Events**: [http://127.0.0.1:3000/events](http://127.0.0.1:3000/events) - Track event participation
+- **All Completions**: [http://127.0.0.1:3000/completions](http://127.0.0.1:3000/completions) - Unified view of all types
+
+Each interface provides:
+- Specialized forms with relevant terminology
+- Type-appropriate progress displays
+- Contextual status indicators
 
 ### API Endpoints
-All completion endpoints support JSON and XML:
-- `GET /completions` - List all completions
+All endpoints support JSON and XML content types:
+
+**General Completions**:
+- `GET /completions` - List all completions (all types)
 - `GET /completions/{id}` - Get specific completion
 - `POST /completions` - Create new completion
 - `PUT /completions/{id}` - Update completion
 - `DELETE /completions/{id}` - Delete completion
+
+**Type-Specific Endpoints**:
+- `GET /tv_shows` - List TV show completions
+- `POST /tv_shows` - Create TV show completion
+- `GET /tv_shows/{id}` - Get specific TV show
+- `PUT /tv_shows/{id}` - Update TV show
+- `DELETE /tv_shows/{id}` - Delete TV show
+
+*(Similar patterns available for `/video_games`, `/books`, `/audio_books`, `/events`)*
 
 ## Development
 

@@ -1,0 +1,8 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">🎮 New Video Game</h3>
+</div>
+
+<%= formFor(completion, {action: videoGamesPath(), method: "POST"}) { %>
+  <%= partial("video_games/form.html") %>
+  <%= linkTo(videoGamesPath(), {class: "btn btn-warning", "data-confirm": "Are you sure?", body: "Cancel"}) %>
+<% } %>

@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-md-12 mb-3">
+    <label class="form-label">Show Name</label>
+    <%= f.InputTag("Name", {class: "form-control", placeholder: "Enter TV show name"}) %>
+    <%= if (errors && errors.Get("name")) { %>
+      <div class="text-danger"><small><%= errors.Get("name") %></small></div>
+    <% } %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="form-label">Episodes Watched</label>
+    <%= f.InputTag("Completions", {class: "form-control", type: "number", min: "0", placeholder: "Number of episodes watched"}) %>
+    <%= if (errors && errors.Get("completions")) { %>
+      <div class="text-danger"><small><%= errors.Get("completions") %></small></div>
+    <% } %>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label class="form-label">Date Completed</label>
+    <%= f.InputTag("CompletedAt", {class: "form-control", type: "datetime-local"}) %>
+    <%= if (errors && errors.Get("completed_at")) { %>
+      <div class="text-danger"><small><%= errors.Get("completed_at") %></small></div>
+    <% } %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <button class="btn btn-success" role="submit">
+      <i class="fas fa-save"></i> Save TV Show
+    </button>
+  </div>
+</div>

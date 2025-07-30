@@ -1,0 +1,45 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">Event Details</h3>
+
+  <div class="float-end">
+    <%= linkTo(eventsPath(), {class: "btn btn-info"}) { %>
+      Back to all Events
+    <% } %>
+    <%= linkTo(editEventPath({ event_id: event.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+    <%= linkTo(eventPath({ event_id: event.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+  </div>
+</div>
+
+
+
+<ul class="list-group mb-2 ">
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">Name</label>
+    <p class="d-inline-block"><%= event.Name %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">Attendees</label>
+    <p class="d-inline-block"><%= event.Attendees %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">Date</label>
+    <p class="d-inline-block"><%= event.Date %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">CompletedAt</label>
+    <p class="d-inline-block"><%= event.CompletedAt %></p>
+  </li>
+
+
+</ul>

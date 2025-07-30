@@ -1,0 +1,8 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">📺 New TV Show</h3>
+</div>
+
+<%= formFor(completion, {action: tvShowsPath(), method: "POST"}) { %>
+  <%= partial("tv_shows/form.html") %>
+  <%= linkTo(tvShowsPath(), {class: "btn btn-warning", "data-confirm": "Are you sure?", body: "Cancel"}) %>
+<% } %>

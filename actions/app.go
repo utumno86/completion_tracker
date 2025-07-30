@@ -68,6 +68,11 @@ func App() *buffalo.App {
 		app.GET("/", HomeHandler)
 
 		app.Resource("/completions", CompletionsResource{})
+		app.Resource("/tv_shows", TvShowsResource{})
+		app.Resource("/video_games", VideoGamesResource{})
+		app.Resource("/books", BooksResource{})
+		app.Resource("/audio_books", AudioBooksResource{})
+		app.Resource("/events", EventsResource{})
 		app.ServeFiles("/", http.FS(public.FS())) // serve files from the public directory
 	})
 

@@ -1,0 +1,33 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">AudioBooks</h3>
+  <div class="float-end">
+    <%= linkTo(newAudioBooksPath(), {class: "btn btn-primary"}) { %>
+      Create New AudioBook
+    <% } %>
+  </div>
+</div>
+
+<table class="table table-hover table-bordered">
+  <thead class="thead-light">
+    <th>Name</th><th>HoursListened</th><th>TotalHours</th><th>CompletedAt</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (audioBook) in audioBooks { %>
+      <tr>
+        <td class="align-middle"><%= audioBook.Name %></td><td class="align-middle"><%= audioBook.HoursListened %></td><td class="align-middle"><%= audioBook.TotalHours %></td><td class="align-middle"><%= audioBook.CompletedAt %></td>
+        <td>
+          <div class="float-end">
+            <%= linkTo(audioBookPath({ audio_book_id: audioBook.ID }), {class: "btn btn-info", body: "View"}) %>
+            <%= linkTo(editAudioBookPath({ audio_book_id: audioBook.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+            <%= linkTo(audioBookPath({ audio_book_id: audioBook.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

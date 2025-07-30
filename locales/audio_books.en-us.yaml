@@ -1,0 +1,6 @@
+- id: "audio_book.created.success"
+  translation: "AudioBook was successfully created."
+- id: "audio_book.updated.success"
+  translation: "AudioBook was successfully updated."
+- id: "audio_book.destroyed.success"
+  translation: "AudioBook was successfully destroyed."

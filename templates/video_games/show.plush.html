@@ -1,0 +1,45 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">VideoGame Details</h3>
+
+  <div class="float-end">
+    <%= linkTo(videoGamesPath(), {class: "btn btn-info"}) { %>
+      Back to all VideoGames
+    <% } %>
+    <%= linkTo(editVideoGamePath({ video_game_id: videoGame.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+    <%= linkTo(videoGamePath({ video_game_id: videoGame.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+  </div>
+</div>
+
+
+
+<ul class="list-group mb-2 ">
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">Name</label>
+    <p class="d-inline-block"><%= videoGame.Name %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">HoursPlayed</label>
+    <p class="d-inline-block"><%= videoGame.HoursPlayed %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">Completed</label>
+    <p class="d-inline-block"><%= videoGame.Completed %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">CompletedAt</label>
+    <p class="d-inline-block"><%= videoGame.CompletedAt %></p>
+  </li>
+
+
+</ul>

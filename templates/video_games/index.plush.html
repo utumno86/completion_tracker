@@ -1,0 +1,52 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">🎮 Video Games</h3>
+  <div class="float-end">
+    <%= linkTo(newVideoGamesPath(), {class: "btn btn-primary"}) { %>
+      <i class="fas fa-plus"></i> Add Video Game
+    <% } %>
+  </div>
+</div>
+
+<table class="table table-hover table-bordered">
+  <thead class="thead-light">
+    <th>Game Title</th><th>Hours Played</th><th>Status</th><th>Completed</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (completion) in completions { %>
+      <tr>
+        <td class="align-middle">
+          <strong><%= completion.Name %></strong>
+        </td>
+        <td class="align-middle">
+          <% if (completion.Completions > 0) { %>
+            <span class="badge bg-info"><%= completion.Completions %> hours</span>
+          <% } else { %>
+            <span class="text-muted">Not played</span>
+          <% } %>
+        </td>
+        <td class="align-middle">
+          <% if (completion.Completions > 0) { %>
+            <span class="badge bg-success">Completed</span>
+          <% } else { %>
+            <span class="badge bg-secondary">Not Started</span>
+          <% } %>
+        </td>
+        <td class="align-middle">
+          <%= completion.CompletedAt.Format("Jan 2, 2006") %>
+        </td>
+        <td>
+          <div class="float-end">
+            <%= linkTo(videoGamePath({ video_game_id: completion.ID }), {class: "btn btn-sm btn-info", body: "View"}) %>
+            <%= linkTo(editVideoGamePath({ video_game_id: completion.ID }), {class: "btn btn-sm btn-warning", body: "Edit"}) %>
+            <%= linkTo(videoGamePath({ video_game_id: completion.ID }), {class: "btn btn-sm btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Delete"}) %>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

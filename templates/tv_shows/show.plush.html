@@ -1,0 +1,45 @@
+<div class="py-4 mb-2">
+  <h3 class="d-inline-block">TvShow Details</h3>
+
+  <div class="float-end">
+    <%= linkTo(tvShowsPath(), {class: "btn btn-info"}) { %>
+      Back to all TvShows
+    <% } %>
+    <%= linkTo(editTvShowPath({ tv_show_id: tvShow.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+    <%= linkTo(tvShowPath({ tv_show_id: tvShow.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+  </div>
+</div>
+
+
+
+<ul class="list-group mb-2 ">
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">Name</label>
+    <p class="d-inline-block"><%= tvShow.Name %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">EpisodesWatched</label>
+    <p class="d-inline-block"><%= tvShow.EpisodesWatched %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">TotalEpisodes</label>
+    <p class="d-inline-block"><%= tvShow.TotalEpisodes %></p>
+  </li>
+
+
+
+  <li class="list-group-item pb-1">
+    <label class="small d-block">CompletedAt</label>
+    <p class="d-inline-block"><%= tvShow.CompletedAt %></p>
+  </li>
+
+
+</ul>

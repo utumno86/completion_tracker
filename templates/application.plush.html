@@ -20,9 +20,20 @@
           <%= linkTo(rootPath(), {class: "nav-link"}) { %>
             Home
           <% } %>
-          <%= linkTo(completionsPath(), {class: "nav-link"}) { %>
-            Completions
-          <% } %>
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              Completions
+            </a>
+            <ul class="dropdown-menu">
+              <li><%= linkTo(tvShowsPath(), {class: "dropdown-item"}) { %>TV Shows<% } %></li>
+              <li><%= linkTo(videoGamesPath(), {class: "dropdown-item"}) { %>Video Games<% } %></li>
+              <li><%= linkTo(booksPath(), {class: "dropdown-item"}) { %>Books<% } %></li>
+              <li><%= linkTo(audioBooksPath(), {class: "dropdown-item"}) { %>Audio Books<% } %></li>
+              <li><%= linkTo(eventsPath(), {class: "dropdown-item"}) { %>Events<% } %></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><%= linkTo(completionsPath(), {class: "dropdown-item"}) { %>All Completions<% } %></li>
+            </ul>
+          </div>
         </div>
       </div>
     </nav>
